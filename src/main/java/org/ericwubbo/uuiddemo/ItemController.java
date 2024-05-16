@@ -7,6 +7,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class ItemController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Item> getById(@PathVariable long id) {
+    public ResponseEntity<Item> getById(@PathVariable UUID id) {
         return itemRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
@@ -33,14 +34,14 @@ public class ItemController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         if (!itemRepository.existsById(id)) return ResponseEntity.notFound().build();
         itemRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Item> update(@PathVariable Long id, @RequestBody Item itemUpdates) {
+    public ResponseEntity<Item> update(@PathVariable UUID id, @RequestBody Item itemUpdates) {
         if (itemUpdates.getId() != null) return ResponseEntity.badRequest().build();
         Optional<Item> possibleItem = itemRepository.findById(id);
         if (possibleItem.isEmpty()) return ResponseEntity.notFound().build();
